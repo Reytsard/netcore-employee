@@ -66,6 +66,13 @@ namespace WebApplication1.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("salary")]
+        public float GetEmployeeSalaryById([FromQuery]int id)
+        {
+            var emp = _service.GetEmployeeById(id);
+            return emp.ComputeMonthlySalary();
+        }
         
         //// GET: EmployeeController
         //public ActionResult Index()
