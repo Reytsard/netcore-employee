@@ -13,6 +13,7 @@ namespace WebApplication1
 
             builder.Services.AddControllers();
             builder.Services.AddSingleton<EmployeeService>();
+            builder.Services.AddSingleton<AuthService>();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
