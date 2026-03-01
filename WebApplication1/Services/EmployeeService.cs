@@ -8,9 +8,27 @@ namespace WebApplication1.Services
         private static List<Employee> employees = new List<Employee>();
         private static int IDNUM = 0;
 
-        public List<Employee> GetEmployees()
+        public List<Employee> GetAllEmployees()
         {
             return employees;
+        }
+        public List<Employee> GetEmployees(FilterEmployeeDTO filter)
+        {
+            IQueryable<Employee> query = employees.AsQueryable();
+
+            if (filter.type.HasValue)
+            {
+                query = query.Where(e => e.Type == filter.type);
+            }
+            if (filter.minRate.HasValue)
+            {
+                query = query.Where(e => e.Rate >= filter.minRate);
+            }
+            if (filter.maxRate.HasValue)
+            {
+                query = query.Where(e => e.Rate <= filter.maxRate);
+            }
+            return query.ToList<Employee>();
         }
 
         public Employee AddEmployee(CreateEmployeeDTO createEmployeeDTO)

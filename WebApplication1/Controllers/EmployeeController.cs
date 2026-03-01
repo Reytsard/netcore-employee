@@ -16,11 +16,9 @@ namespace WebApplication1.Controllers
             _service = service;
         }
 
-        [HttpGet]
-        [Route("get")]
-        public Employee GetEmployeeById([FromQuery] int id)
-        {
-            return _service.GetEmployeeById(id);
+        [HttpGet("get")]
+        public List<Employee> GetEmployees([FromQuery] FilterEmployeeDTO filter) {
+            return _service.GetEmployees(filter);
         }
 
         [HttpGet("salary")]
@@ -31,9 +29,9 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet("get-list")]
-        public List<Employee> GetEmployees()
+        public List<Employee> GetAllEmployees()
         {
-            return _service.GetEmployees();
+            return _service.GetAllEmployees();
         }
 
         [HttpPost("upload")]
