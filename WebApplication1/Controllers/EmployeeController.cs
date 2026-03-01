@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebApplication1.DTOs;
 using WebApplication1.Models;
 using WebApplication1.Services;
@@ -16,11 +17,13 @@ namespace WebApplication1.Controllers
             _service = service;
         }
 
+        [Authorize]
         [HttpGet("get")]
         public List<Employee> GetEmployees([FromQuery] FilterEmployeeDTO filter) {
             return _service.GetEmployees(filter);
         }
 
+        [Authorize]
         [HttpGet("salary")]
         public float GetEmployeeSalaryById([FromQuery] int id)
         {
@@ -28,12 +31,14 @@ namespace WebApplication1.Controllers
             return emp.ComputeMonthlySalary();
         }
 
+        [Authorize]
         [HttpGet("get-list")]
         public List<Employee> GetAllEmployees()
         {
             return _service.GetAllEmployees();
         }
 
+        [Authorize]
         [HttpPost("upload")]
         public async Task<IActionResult> UploadFile(
                 IFormFile file
