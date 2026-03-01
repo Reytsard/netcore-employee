@@ -1,6 +1,6 @@
 ﻿namespace WebApplication1.Models
 {
-    public class PartTimeEmployee(int id, string name, float rate):Employee(id, name, rate, EmployeeType.PARTTIME)
+    public class PartTimeEmployee(int id, string name, float rate, string email, string password) : Employee(id, name, rate, EmployeeType.PARTTIME, email, password)
     {
         public override float ComputeMonthlySalary()
         {

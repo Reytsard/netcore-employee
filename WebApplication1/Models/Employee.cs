@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace WebApplication1.Models
+﻿namespace WebApplication1.Models
 {
     public class Employee
     {
@@ -9,14 +7,21 @@ namespace WebApplication1.Models
         public string Name { get; set; }
         public float Rate { get; set; }
         public EmployeeType Type { get; set; }
-        public Employee(int id, string name, float hourlyRate, EmployeeType type)
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public bool IsActive { get; set; }
+        public Employee(int id, string name, float hourlyRate, EmployeeType type, string email, string password)
         {
             Id = id;
             Name = name;
             Type = type;
             Rate = hourlyRate;
+            Email = email;
+            Password = password;
+            IsActive = true;
         }
-        public virtual float ComputeMonthlySalary() {
+        public virtual float ComputeMonthlySalary()
+        {
             return 0;
         }
     }

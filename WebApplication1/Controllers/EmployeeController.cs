@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.DTOs;
 using WebApplication1.Models;
 using WebApplication1.Services;
@@ -7,7 +6,7 @@ using WebApplication1.Services;
 namespace WebApplication1.Controllers
 {
     [ApiController]
-    [Route("employee/[controller]")]
+    [Route("employee")]
     public class EmployeeController : Controller
     {
         EmployeeService _service;
@@ -24,6 +23,19 @@ namespace WebApplication1.Controllers
             return _service.GetEmployeeById(id);
         }
 
+        [HttpGet("salary")]
+        public float GetEmployeeSalaryById([FromQuery] int id)
+        {
+            var emp = _service.GetEmployeeById(id);
+            return emp.ComputeMonthlySalary();
+        }
+
+        [HttpGet("get-list")]
+        public List<Employee> GetEmployees()
+        {
+            return _service.GetEmployees();
+        }
+
         [HttpPost("upload")]
         public async Task<IActionResult> UploadFile(
                 IFormFile file
@@ -31,7 +43,7 @@ namespace WebApplication1.Controllers
         {
             Console.WriteLine("file");
             Console.WriteLine(file);
-            if(file == null)
+            if (file == null)
             {
                 return BadRequest("Empty File Detected");
             }
@@ -42,18 +54,14 @@ namespace WebApplication1.Controllers
         }
 
 
-        [HttpGet("get-list")]
-        public List<Employee> GetEmployees()
-        {
-            return _service.GetEmployees();
-        }
+
 
         [HttpPost("create")]
         public IActionResult CreateUser([FromBody] CreateEmployeeDTO createEmployeeDTO)
         {
             try
             {
-                Employee emp =  _service.AddEmployee(createEmployeeDTO);
+                Employee emp = _service.AddEmployee(createEmployeeDTO);
                 return Ok(new
                 {
                     emp.Id,
@@ -67,13 +75,39 @@ namespace WebApplication1.Controllers
             }
         }
 
-        [HttpGet("salary")]
-        public float GetEmployeeSalaryById([FromQuery]int id)
+        [HttpPatch("update")]
+        public IActionResult UpdateProfile(UpdateProfileDTO newProfile)
         {
-            var emp = _service.GetEmployeeById(id);
-            return emp.ComputeMonthlySalary();
+            try
+            {
+                Employee emp = _service.UpdateEmployeeProfile(newProfile);
+                return Ok(new
+                {
+                    message = "Update Successful"
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
-        
+
+        [HttpDelete("delete/{id}")]
+        public IActionResult DeleteEmployee(int id)
+        {
+            try
+            {
+                _service.DeleteEmployee(id);
+                return Ok(new
+                {
+                    message = "User Deleted"
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         //// GET: EmployeeController
         //public ActionResult Index()
         //{
