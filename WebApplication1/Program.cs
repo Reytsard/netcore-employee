@@ -1,4 +1,6 @@
 
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using WebApplication1.Services;
 
 namespace WebApplication1
@@ -14,6 +16,24 @@ namespace WebApplication1
             builder.Services.AddControllers();
             builder.Services.AddSingleton<EmployeeService>();
             builder.Services.AddSingleton<AuthService>();
+            builder.Services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+
+                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                        ValidAudience = builder.Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                    };
+                }
+                );
+            
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
@@ -31,6 +51,8 @@ namespace WebApplication1
                 app.UseSwaggerUI();
             }
 
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
